@@ -13,8 +13,8 @@
       "website": "https://techcorp.com",
       "notes": "VIP customer with premium support. Interested in enterprise solutions.",
       "status": "active",
-      "createdAt": "2024-01-15T10:30:00.000Z",
-      "updatedAt": "2024-01-15T10:30:00.000Z"
+      "createdAt": "2025-08-15T10:30:00.000Z",
+      "updatedAt": "2025-10-20T14:22:00.000Z"
     },
     {
       "id": "2",
@@ -29,8 +29,8 @@
       "website": "https://designstudio.com",
       "notes": "Regular client for design services. Prefers email communication.",
       "status": "active",
-      "createdAt": "2024-01-20T14:15:00.000Z",
-      "updatedAt": "2024-01-20T14:15:00.000Z"
+      "createdAt": "2025-09-05T14:15:00.000Z",
+      "updatedAt": "2025-10-18T09:30:00.000Z"
     },
     {
       "id": "3",
@@ -45,8 +45,8 @@
       "website": "https://startupxyz.com",
       "notes": "New startup looking for scalable solutions. High potential client.",
       "status": "pending",
-      "createdAt": "2024-01-25T09:45:00.000Z",
-      "updatedAt": "2024-01-25T09:45:00.000Z"
+      "createdAt": "2025-10-15T09:45:00.000Z",
+      "updatedAt": "2025-10-15T09:45:00.000Z"
     },
     {
       "id": "4",
@@ -61,8 +61,8 @@
       "website": "https://globalmarketing.com",
       "notes": "International client. Fluent in Spanish and English.",
       "status": "active",
-      "createdAt": "2024-01-28T16:20:00.000Z",
-      "updatedAt": "2024-01-28T16:20:00.000Z"
+      "createdAt": "2025-09-20T16:20:00.000Z",
+      "updatedAt": "2025-10-22T11:15:00.000Z"
     },
     {
       "id": "5",
@@ -77,8 +77,8 @@
       "website": "https://financesolutions.co.uk",
       "notes": "Requires compliance with UK financial regulations.",
       "status": "inactive",
-      "createdAt": "2024-01-30T11:10:00.000Z",
-      "updatedAt": "2024-01-30T11:10:00.000Z"
+      "createdAt": "2025-07-10T11:10:00.000Z",
+      "updatedAt": "2025-09-15T16:45:00.000Z"
     },
     {
       "id": "6",
@@ -93,8 +93,8 @@
       "website": "https://asiapacific.com",
       "notes": "Key account for Asia Pacific region. Requires Chinese language support.",
       "status": "active",
-      "createdAt": "2024-02-01T08:30:00.000Z",
-      "updatedAt": "2024-02-01T08:30:00.000Z"
+      "createdAt": "2025-10-01T08:30:00.000Z",
+      "updatedAt": "2025-10-24T10:20:00.000Z"
     },
     {
       "id": "7",
@@ -109,8 +109,8 @@
       "website": "https://aussietech.com.au",
       "notes": "Technical decision maker. Interested in cloud solutions.",
       "status": "active",
-      "createdAt": "2024-02-03T13:45:00.000Z",
-      "updatedAt": "2024-02-03T13:45:00.000Z"
+      "createdAt": "2025-09-12T13:45:00.000Z",
+      "updatedAt": "2025-10-19T15:30:00.000Z"
     },
     {
       "id": "8",
@@ -125,8 +125,8 @@
       "website": "https://europeanventures.eu",
       "notes": "Expanding business across Europe. Needs multi-language support.",
       "status": "pending",
-      "createdAt": "2024-02-05T10:15:00.000Z",
-      "updatedAt": "2024-02-05T10:15:00.000Z"
+      "createdAt": "2025-10-20T10:15:00.000Z",
+      "updatedAt": "2025-10-20T10:15:00.000Z"
     }
   ]
 }

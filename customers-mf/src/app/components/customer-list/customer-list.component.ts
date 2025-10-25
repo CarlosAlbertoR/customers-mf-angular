@@ -105,17 +105,17 @@ import { CustomerCardComponent } from '../customer-card/customer-card.component'
             </div>
           </div>
 
-          <div class="metric-card growth">
-            <div class="metric-icon">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M7 17L17 7M17 7H7M17 7V17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            </div>
-            <div class="metric-content">
-              <div class="metric-value">+12%</div>
-              <div class="metric-label">Growth</div>
-            </div>
-          </div>
+                 <div class="metric-card growth">
+                   <div class="metric-icon">
+                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                       <path d="M7 17L17 7M17 7H7M17 7V17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                     </svg>
+                   </div>
+                   <div class="metric-content">
+                     <div class="metric-value" [class.positive]="getGrowthPercentage().startsWith('+')" [class.negative]="getGrowthPercentage().startsWith('-')">{{ getGrowthPercentage() }}</div>
+                     <div class="metric-label">Growth</div>
+                   </div>
+                 </div>
         </div>
       </div>
 
@@ -165,7 +165,12 @@ import { CustomerCardComponent } from '../customer-card/customer-card.component'
           <div class="grid-header">
             <div class="grid-title">
               <h2>Customer Directory</h2>
-              <span class="customer-count">{{ customers().length }} customers</span>
+              <span class="customer-count">
+                {{ filteredCustomers().length }} of {{ customers().length }} customers
+                @if (statusFilter()) {
+                  <span class="filter-indicator">({{ statusFilter() }} status)</span>
+                }
+              </span>
             </div>
 
             <div class="grid-controls">
@@ -182,6 +187,14 @@ import { CustomerCardComponent } from '../customer-card/customer-card.component'
                 />
               </div>
 
+              <div class="status-filter">
+                <select class="status-select" [value]="statusFilter()" (change)="onStatusFilterChange($event)">
+                  <option value="">All Status</option>
+                  <option value="active">Active</option>
+                  <option value="inactive">Inactive</option>
+                  <option value="pending">Pending</option>
+                </select>
+              </div>
             </div>
           </div>
 
@@ -418,13 +431,21 @@ import { CustomerCardComponent } from '../customer-card/customer-card.component'
         flex: 1;
       }
 
-      .metric-value {
-        font-size: 2rem;
-        font-weight: 800;
-        color: #1a202c;
-        line-height: 1;
-        margin-bottom: 0.25rem;
-      }
+             .metric-value {
+               font-size: 2rem;
+               font-weight: 800;
+               color: #1a202c;
+               line-height: 1;
+               margin-bottom: 0.25rem;
+             }
+
+             .metric-value.positive {
+               color: #10b981;
+             }
+
+             .metric-value.negative {
+               color: #ef4444;
+             }
 
       .metric-label {
         font-size: 0.875rem;
@@ -644,11 +665,17 @@ import { CustomerCardComponent } from '../customer-card/customer-card.component'
         margin: 0;
       }
 
-      .customer-count {
-        font-size: 0.875rem;
-        color: #64748b;
-        font-weight: 500;
-      }
+             .customer-count {
+               font-size: 0.875rem;
+               color: #64748b;
+               font-weight: 500;
+             }
+
+             .filter-indicator {
+               color: #667eea;
+               font-weight: 600;
+               margin-left: 0.5rem;
+             }
 
       .grid-controls {
         display: flex;
@@ -680,11 +707,38 @@ import { CustomerCardComponent } from '../customer-card/customer-card.component'
         width: 300px;
       }
 
-      .search-input:focus {
-        outline: none;
-        border-color: #667eea;
-        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-      }
+             .search-input:focus {
+               outline: none;
+               border-color: #667eea;
+               box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+             }
+
+             .status-filter {
+               display: flex;
+               align-items: center;
+             }
+
+             .status-select {
+               padding: 0.75rem 1rem;
+               border: 2px solid #e2e8f0;
+               border-radius: 12px;
+               font-size: 0.95rem;
+               background: white;
+               color: #1a202c;
+               transition: all 0.3s ease;
+               cursor: pointer;
+               min-width: 140px;
+             }
+
+             .status-select:focus {
+               outline: none;
+               border-color: #667eea;
+               box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+             }
+
+             .status-select:hover {
+               border-color: #cbd5e1;
+             }
 
       .filter-button,
       .view-toggle {
@@ -1039,19 +1093,33 @@ export class CustomerListComponent implements OnInit {
   private snackBar = inject(MatSnackBar);
   private router = inject(Router);
 
-  // Search functionality
+  // Search and filter functionality
   searchQuery = signal('');
+  statusFilter = signal('');
+  
   filteredCustomers = computed(() => {
+    let filtered = this.customers();
+    
+    // Apply search filter
     const query = this.searchQuery().toLowerCase();
-    if (!query) return this.customers();
-    return this.customers().filter(customer => 
-      customer.name.toLowerCase().includes(query) ||
-      customer.email.toLowerCase().includes(query) ||
-      customer.company?.toLowerCase().includes(query) ||
-      customer.position?.toLowerCase().includes(query) ||
-      customer.city?.toLowerCase().includes(query) ||
-      customer.country?.toLowerCase().includes(query)
-    );
+    if (query) {
+      filtered = filtered.filter(customer => 
+        customer.name.toLowerCase().includes(query) ||
+        customer.email.toLowerCase().includes(query) ||
+        customer.company?.toLowerCase().includes(query) ||
+        customer.position?.toLowerCase().includes(query) ||
+        customer.city?.toLowerCase().includes(query) ||
+        customer.country?.toLowerCase().includes(query)
+      );
+    }
+    
+    // Apply status filter
+    const status = this.statusFilter();
+    if (status) {
+      filtered = filtered.filter(customer => customer.status === status);
+    }
+    
+    return filtered;
   });
 
   // Computed signal for customers
@@ -1068,6 +1136,11 @@ export class CustomerListComponent implements OnInit {
   onSearchChange(event: Event): void {
     const target = event.target as HTMLInputElement;
     this.searchQuery.set(target.value);
+  }
+
+  onStatusFilterChange(event: Event): void {
+    const target = event.target as HTMLSelectElement;
+    this.statusFilter.set(target.value);
   }
 
   addNewCustomer(): void {
@@ -1127,7 +1200,7 @@ export class CustomerListComponent implements OnInit {
   }
 
   getActiveCustomers(): number {
-    return this.customers().length; // For demo purposes, assume all are active
+    return this.customers().filter(c => c.status === 'active').length;
   }
 
   getRecentCustomers(): number {
@@ -1138,6 +1211,31 @@ export class CustomerListComponent implements OnInit {
       const createdDate = new Date(customer.createdAt);
       return createdDate > oneMonthAgo;
     }).length;
+  }
+
+  getGrowthPercentage(): string {
+    const currentMonth = new Date();
+    const lastMonth = new Date();
+    lastMonth.setMonth(lastMonth.getMonth() - 1);
+    
+    const currentMonthCustomers = this.customers().filter(c => {
+      const createdDate = new Date(c.createdAt);
+      return createdDate.getMonth() === currentMonth.getMonth() && 
+             createdDate.getFullYear() === currentMonth.getFullYear();
+    }).length;
+    
+    const lastMonthCustomers = this.customers().filter(c => {
+      const createdDate = new Date(c.createdAt);
+      return createdDate.getMonth() === lastMonth.getMonth() && 
+             createdDate.getFullYear() === lastMonth.getFullYear();
+    }).length;
+    
+    if (lastMonthCustomers === 0) {
+      return currentMonthCustomers > 0 ? '+100%' : '0%';
+    }
+    
+    const growth = ((currentMonthCustomers - lastMonthCustomers) / lastMonthCustomers) * 100;
+    return growth >= 0 ? `+${Math.round(growth)}%` : `${Math.round(growth)}%`;
   }
 
   formatDate(dateString: string): string {

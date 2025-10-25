@@ -23,14 +23,28 @@ import { CustomerDeleteDialogComponent } from '../customer-delete-dialog/custome
         </div>
 
         <div class="card-actions">
-          <button class="card-action-btn favorite" (click)="toggleFavorite()">
-            <span>{{ isFavorite ? '⭐' : '☆' }}</span>
+          <button class="card-action-btn favorite" (click)="toggleFavorite()" [class.favorited]="isFavorite">
+            @if (isFavorite) {
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" fill="currentColor"/>
+              </svg>
+            } @else {
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            }
           </button>
         </div>
       </div>
 
       <div class="card-body">
-        <h3 class="customer-name-pro">{{ customer.name }}</h3>
+        <div class="customer-header">
+          <h3 class="customer-name-pro">{{ customer.name }}</h3>
+          <div class="status-badge" [class]="getStatusBadgeClass(customer.status)">
+            <span class="status-dot"></span>
+            <span class="status-text">{{ getStatusText(customer.status) }}</span>
+          </div>
+        </div>
 
         <div class="contact-info-pro">
           <div class="contact-item-pro">
@@ -194,16 +208,133 @@ import { CustomerDeleteDialogComponent } from '../customer-delete-dialog/custome
       color: #667eea;
     }
 
+    .card-action-btn.favorite {
+      background: rgba(245, 158, 11, 0.1);
+      color: #f59e0b;
+      border: 1px solid rgba(245, 158, 11, 0.2);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .card-action-btn.favorite:hover {
+      background: rgba(245, 158, 11, 0.2);
+      color: #d97706;
+      border-color: rgba(245, 158, 11, 0.4);
+      transform: scale(1.1);
+      box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+    }
+
+    .card-action-btn.favorite.favorited {
+      background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+      color: white;
+      border-color: #d97706;
+      box-shadow: 0 2px 8px rgba(245, 158, 11, 0.4);
+    }
+
+    .card-action-btn.favorite.favorited:hover {
+      background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
+      transform: scale(1.15);
+      box-shadow: 0 6px 20px rgba(245, 158, 11, 0.5);
+    }
+
+    .card-action-btn.favorite.favorited {
+      animation: favorite-pulse 0.6s ease-out;
+    }
+
+    @keyframes favorite-pulse {
+      0% {
+        transform: scale(1);
+        box-shadow: 0 2px 8px rgba(245, 158, 11, 0.4);
+      }
+      50% {
+        transform: scale(1.2);
+        box-shadow: 0 8px 25px rgba(245, 158, 11, 0.6);
+      }
+      100% {
+        transform: scale(1);
+        box-shadow: 0 2px 8px rgba(245, 158, 11, 0.4);
+      }
+    }
+
     .card-body {
       margin-bottom: 1.5rem;
+    }
+
+    .customer-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 1rem;
+      gap: 1rem;
     }
 
     .customer-name-pro {
       font-size: 1.25rem;
       font-weight: 700;
       color: #1a202c;
-      margin: 0 0 1rem 0;
+      margin: 0;
       line-height: 1.3;
+      flex: 1;
+    }
+
+    .status-badge {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.375rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      white-space: nowrap;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .status-badge-active {
+      background: rgba(16, 185, 129, 0.3) !important;
+      color: #064e3b !important;
+      border: 2px solid rgba(16, 185, 129, 0.6) !important;
+      font-weight: 800 !important;
+    }
+
+    .status-badge-inactive {
+      background: rgba(239, 68, 68, 0.3) !important;
+      color: #7f1d1d !important;
+      border: 2px solid rgba(239, 68, 68, 0.6) !important;
+      font-weight: 800 !important;
+    }
+
+    .status-badge-pending {
+      background: rgba(245, 158, 11, 0.3) !important;
+      color: #451a03 !important;
+      border: 2px solid rgba(245, 158, 11, 0.6) !important;
+      font-weight: 800 !important;
+    }
+
+    .status-badge-pending .status-text {
+      color: #451a03 !important;
+    }
+
+    .status-badge-active .status-text {
+      color: #064e3b !important;
+    }
+
+    .status-badge-inactive .status-text {
+      color: #7f1d1d !important;
+    }
+
+    .status-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: currentColor;
+    }
+
+    .status-text {
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+      color: inherit !important;
     }
 
     .contact-info-pro {
@@ -365,6 +496,23 @@ export class CustomerCardComponent {
 
   getStatusClass(status: string): string {
     return status.toLowerCase();
+  }
+
+  getStatusBadgeClass(status: string): string {
+    return `status-badge-${status.toLowerCase()}`;
+  }
+
+  getStatusText(status: string): string {
+    switch (status.toLowerCase()) {
+      case 'active':
+        return 'Active';
+      case 'inactive':
+        return 'Inactive';
+      case 'pending':
+        return 'Pending';
+      default:
+        return status;
+    }
   }
 
   formatDate(date: Date): string {
