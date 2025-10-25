@@ -6,14 +6,17 @@
     "build": "pnpm run build:shell && pnpm run build:customers-mf",
     "build:shell": "pnpm --filter shell run build",
     "build:customers-mf": "pnpm --filter customers-mf run build",
-    "start": "pnpm run start:shell",
+    "start": "pnpm run start:all",
+    "start:all": "concurrently \"pnpm run start:shell\" \"pnpm run start:customers-mf\" \"pnpm run start:api\"",
     "start:shell": "pnpm --filter shell run start",
     "start:customers-mf": "pnpm --filter customers-mf run start",
+    "start:api": "pnpm --filter customers-mf run api",
     "test": "pnpm run test:customers-mf",
     "test:customers-mf": "pnpm --filter customers-mf run test",
     "test:shell": "pnpm --filter shell run test",
     "install:all": "pnpm install",
-    "dev": "concurrently \"pnpm run start:shell\" \"pnpm run start:customers-mf\""
+    "dev": "concurrently \"pnpm run start:shell\" \"pnpm run start:customers-mf\" \"pnpm run start:api\"",
+    "vercel-build": "pnpm run install:all && pnpm run build"
   },
   "devDependencies": {
     "concurrently": "^8.2.2"

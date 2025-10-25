@@ -26,5 +26,7 @@
     "shell/package.json": {
       "runtime": "nodejs22.x"
     }
-  }
+  },
+  "installCommand": "pnpm install",
+  "buildCommand": "pnpm run build"
 }

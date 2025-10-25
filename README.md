@@ -35,9 +35,33 @@ vercel --prod
 - Node.js 22+
 - pnpm 8+
 
+### 🚀 **Comandos Rápidos (Makefile)**
+
+```bash
+# Ver todos los comandos disponibles
+make help
+
+# Instalar dependencias
+make install
+
+# Iniciar todos los servicios (shell + mf + api)
+make start
+
+# Modo desarrollo
+make dev
+
+# Ejecutar tests
+make test
+
+# Build completo
+make build
+```
+
+### 📦 **Comandos Individuales**
+
 ```bash
 # Instalar dependencias
-pnpm run install:all
+pnpm install
 
 # Ejecutar en modo desarrollo
 pnpm run dev
@@ -45,6 +69,7 @@ pnpm run dev
 # O ejecutar individualmente
 pnpm run start:shell
 pnpm run start:customers-mf
+pnpm run start:api
 ```
 
 ## 🧪 Testing
