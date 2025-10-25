@@ -9,7 +9,7 @@
     "test": "ng test --browsers=Edge",
     "test:headless": "ng test --browsers=jsdom",
     "test:coverage": "ng test --code-coverage --browsers=jsdom",
-    "test:ci": "ng test --watch=false --browsers=jsdom --code-coverage",
+    "test:ci": "ng test --watch=false --browsers=jsdom --code-coverage --karma-config=karma-simple.conf.js",
     "serve:ssr:customers-mf": "node dist/customers-mf/server/server.mjs",
     "run:all": "node node_modules/@angular-architects/module-federation/src/server/mf-dev-server.js",
     "start:customers-mf": "rsbuild dev",
