@@ -33,40 +33,40 @@ vercel --prod
 
 **Requisitos:**
 - Node.js 22+
-- npm 10+
+- pnpm 8+
 
 ```bash
 # Instalar dependencias
-npm run install:all
+pnpm run install:all
 
 # Ejecutar en modo desarrollo
-npm run dev
+pnpm run dev
 
 # O ejecutar individualmente
-npm run start:shell
-npm run start:customers-mf
+pnpm run start:shell
+pnpm run start:customers-mf
 ```
 
 ## 🧪 Testing
 
 ```bash
 # Ejecutar todos los tests
-npm run test
+pnpm run test
 
 # Tests específicos
-npm run test:customers-mf
-npm run test:shell
+pnpm run test:customers-mf
+pnpm run test:shell
 ```
 
 ## 📦 Build
 
 ```bash
 # Build completo
-npm run build
+pnpm run build
 
 # Build individual
-npm run build:shell
-npm run build:customers-mf
+pnpm run build:shell
+pnpm run build:customers-mf
 ```
 
 ## 🌐 URLs de Despliegue
