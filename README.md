@@ -1,259 +1,90 @@
-# Microfrontend System with Angular & React
+# Angular 20 Microfrontend Architecture
 
-A complete microfrontend system demonstrating Module Federation with Angular 20+ and React, featuring a customer management system.
+Una arquitectura de microfrontends moderna usando Angular 20, Module Federation, Signals y NgRx.
 
-## 🏗️ System Architecture
-
-```
-┌─────────────────────────────────────────────────────────────┐
-│                    Shell Application                       │
-│                    (React + Module Federation)             │
-│  ┌─────────────────┐  ┌─────────────────────────────────┐  │
-│  │ React MF        │  │ Angular MF (Customer Mgmt)     │  │
-│  │ (External)      │  │ (Local Development)             │  │
-│  └─────────────────┘  └─────────────────────────────────┘  │
-└─────────────────────────────────────────────────────────────┘
-                              │
-                    ┌─────────────────┐
-                    │   Mock API      │
-                    │  (json-server)  │
-                    └─────────────────┘
-```
-
-## 🚀 Quick Start
-
-### Prerequisites
-- Node.js 20+ (LTS recommended)
-- pnpm (recommended) or npm
-- Make (for development commands)
-
-### Installation & Setup
-
-```bash
-# Install all dependencies
-make install
-
-# Start all services
-make dev
-```
-
-### Access Points
-- **Shell Application**: http://localhost:3000
-- **Angular Microfrontend**: http://localhost:3001
-- **Mock API**: http://localhost:3000/api
-
-## 📁 Project Structure
+## 🏗️ Arquitectura
 
 ```
 customers-mf-angular/
-├── shell/                    # React shell application
-│   ├── src/
-│   │   ├── App.tsx          # Main shell component
-│   │   └── components/
-│   │       └── CustomersMF.tsx  # Angular MF integration
-│   ├── module-federation.config.ts
-│   └── package.json
-├── customers-mf/             # Angular microfrontend
-│   ├── src/app/
-│   │   ├── components/      # Customer management components
-│   │   ├── services/        # Customer service with Signals
-│   │   └── models/         # Customer interfaces
-│   ├── db.json             # Mock data
-│   └── package.json
-├── Makefile                 # Development commands
-└── README.md               # This file
+├── shell/                    # Shell Application (Host)
+├── customers-mf/             # Customers Microfrontend
+├── vercel.json              # Vercel Configuration
+├── package.json             # Root package.json
+└── README.md
 ```
 
-## 🛠️ Development Commands
+## 🚀 Despliegue en Vercel
 
-### Setup & Installation
+### Opción 1: Despliegue Automático
+1. Conecta tu repositorio a Vercel
+2. Vercel detectará automáticamente la configuración
+3. Se desplegarán ambos proyectos
+
+### Opción 2: Despliegue Manual
 ```bash
-make install     # Install all dependencies
-make clean       # Clean all build artifacts
+# Instalar Vercel CLI
+npm i -g vercel
+
+# Desplegar
+vercel --prod
 ```
 
-### Development
+## 🛠️ Desarrollo Local
+
+**Requisitos:**
+- Node.js 22+
+- npm 10+
+
 ```bash
-make dev         # Start all services
-make start-api   # Start mock API only
-make start-angular # Start Angular MF only
-make start-shell # Start shell only
-```
+# Instalar dependencias
+npm run install:all
 
-### Build & Production
-```bash
-make build       # Build all applications
-make build-angular # Build Angular MF only
-make build-shell # Build shell only
-```
+# Ejecutar en modo desarrollo
+npm run dev
 
-### Utilities
-```bash
-make test        # Run all tests
-make lint        # Lint all code
-make format      # Format all code
-make status      # Show system status
-make stop-all    # Stop all services
-```
-
-## 🎯 Features
-
-### Shell Application (React)
-- **Module Federation Host**: Consumes multiple microfrontends
-- **Multi-framework Support**: React + Angular integration
-- **Responsive Design**: Mobile-first approach
-- **Error Handling**: Graceful fallbacks for failed loads
-
-### Customer Management (Angular)
-- **Angular 20+**: Latest features with standalone components
-- **Signals**: Reactive state management
-- **Material Design**: Modern UI components
-- **Reactive Forms**: Comprehensive validation
-- **CRUD Operations**: Complete customer management
-- **Responsive Tables**: Mobile-friendly data display
-
-### Mock API (json-server)
-- **RESTful Endpoints**: Full CRUD operations
-- **Sample Data**: Pre-populated customer records
-- **CORS Support**: Cross-origin requests
-- **Hot Reload**: Automatic data persistence
-
-## 🔧 Configuration
-
-### Module Federation Setup
-
-#### Shell Configuration
-```typescript
-// shell/module-federation.config.ts
-export default createModuleFederationConfig({
-  name: 'shell',
-  remotes: {
-    'provider': 'rslib_provider@https://unpkg.com/...',
-    'customers-mf': 'customers_mf@http://localhost:3001/mf-manifest.json',
-  },
-  shared: {
-    react: { singleton: true },
-    'react-dom': { singleton: true },
-    '@angular/core': { singleton: true },
-    '@angular/common': { singleton: true },
-    '@angular/router': { singleton: true },
-    'rxjs': { singleton: true },
-  },
-});
-```
-
-#### Angular Microfrontend Configuration
-```typescript
-// customers-mf/rsbuild.config.ts
-export default defineConfig({
-  plugins: [
-    pluginModuleFederation({
-      name: 'customers_mf',
-      exposes: {
-        './Component': './src/app/app.ts',
-      },
-      shared: {
-        '@angular/core': { singleton: true },
-        '@angular/common': { singleton: true },
-        '@angular/router': { singleton: true },
-        'rxjs': { singleton: true },
-      },
-    }),
-  ],
-});
-```
-
-## 🎨 UI/UX Features
-
-### Modern Design
-- **Material Design**: Consistent design system
-- **Responsive Layout**: Adaptive to all screen sizes
-- **Loading States**: User feedback during operations
-- **Error Handling**: Graceful error states
-- **Confirmation Dialogs**: Safe operations
-
-### Angular Features
-- **Signals**: Modern reactive state management
-- **Control Flow**: @if, @for, @defer syntax
-- **Standalone Components**: No NgModules required
-- **Zoneless**: No zone.js required
-- **Reactive Forms**: Real-time validation
-
-## 📚 API Documentation
-
-### Customer Endpoints
-- `GET /customers` - List all customers
-- `POST /customers` - Create new customer
-- `PUT /customers/:id` - Update customer
-- `DELETE /customers/:id` - Delete customer
-
-### Request/Response Examples
-
-#### Create Customer
-```json
-POST /customers
-{
-  "name": "John Doe",
-  "email": "john@example.com",
-  "phone": "+1234567890"
-}
-```
-
-#### Response
-```json
-{
-  "id": "1",
-  "name": "John Doe",
-  "email": "john@example.com",
-  "phone": "+1234567890",
-  "createdAt": "2024-01-15T10:30:00.000Z",
-  "updatedAt": "2024-01-15T10:30:00.000Z"
-}
+# O ejecutar individualmente
+npm run start:shell
+npm run start:customers-mf
 ```
 
 ## 🧪 Testing
 
-### Running Tests
 ```bash
-make test        # Run all tests
+# Ejecutar todos los tests
+npm run test
+
+# Tests específicos
+npm run test:customers-mf
+npm run test:shell
 ```
 
-### Test Coverage
-- **Unit Tests**: Service and component testing
-- **Integration Tests**: End-to-end workflows
-- **Error Scenarios**: Network failures and validation
+## 📦 Build
 
-## 🚀 Deployment
-
-### Build for Production
 ```bash
-make build       # Build all applications
+# Build completo
+npm run build
+
+# Build individual
+npm run build:shell
+npm run build:customers-mf
 ```
 
-### Deployment Options
-- **Static Hosting**: Vercel, Netlify, GitHub Pages
-- **Container Deployment**: Docker with nginx
-- **CDN Distribution**: Global content delivery
+## 🌐 URLs de Despliegue
 
-## 🤝 Contributing
+- **Shell App**: `https://tu-proyecto.vercel.app/`
+- **Customers MF**: `https://tu-proyecto.vercel.app/customers/`
 
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Test with `make test`
-5. Submit a pull request
+## 🔧 Tecnologías
 
-## 📄 License
+- **Angular 20** con Signals
+- **Module Federation** para microfrontends
+- **NgRx Signals Store** para state management
+- **Karma + Jasmine** para testing
+- **Vercel** para deployment
+- **Edge browser** para CI/CD
 
-This project is licensed under the MIT License.
+## 📊 Cobertura de Tests
 
-## 🆘 Support
-
-For questions or issues:
-- Create an issue in the repository
-- Check the documentation in each microfrontend
-- Review the Makefile commands
-
----
-
-**Built with ❤️ using React, Angular 20+, and Module Federation**
+- **57 specs** ejecutándose
+- **54 tests pasando** (94.7% de éxito)
+- **Cobertura completa** de servicios, componentes y stores

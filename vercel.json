@@ -1,0 +1,30 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "shell/package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "dist"
+      }
+    }
+  ],
+  "routes": [
+    {
+      "src": "/customers/(.*)",
+      "dest": "/customers-mf/$1"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/shell/$1"
+    }
+  ],
+  "env": {
+    "NODE_ENV": "production"
+  },
+  "functions": {
+    "shell/package.json": {
+      "runtime": "nodejs22.x"
+    }
+  }
+}
