@@ -795,7 +795,8 @@ export class CustomerFormComponent implements OnInit {
 
   private updateCustomer(customerData: any): void {
     if (this.customerId) {
-      this.customerService.updateCustomer(customerData).subscribe({
+      const customerWithId = { ...customerData, id: this.customerId };
+      this.customerService.updateCustomer(customerWithId).subscribe({
         next: (updatedCustomer: any) => {
           this.snackBar.open('Customer updated successfully!', 'Close', { duration: 3000 });
           this.router.navigate(['/customers']);

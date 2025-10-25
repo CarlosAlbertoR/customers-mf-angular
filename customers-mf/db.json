@@ -127,20 +127,6 @@
       "status": "pending",
       "createdAt": "2024-02-05T10:15:00.000Z",
       "updatedAt": "2024-02-05T10:15:00.000Z"
-    },
-    {
-      "id": "9b04",
-      "name": "Carlos Alberto Rios",
-      "email": "carlosalbertorios3@gmail.com",
-      "phone": "345532344",
-      "company": "Inchcape",
-      "position": "architect",
-      "address": "170001",
-      "city": "Manizales",
-      "country": "Colombia",
-      "website": "https://www,company.xim",
-      "notes": "dke",
-      "status": "active"
     }
   ]
 }

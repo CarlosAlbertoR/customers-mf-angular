@@ -10,6 +10,13 @@ export default defineConfig({
   dev: {
     lazyCompilation: false, // Disable lazy compilation to avoid module resolution issues
   },
+  build: {
+    target: 'es2015', // Ensure modern target for AOT
+  },
+  dev: {
+    lazyCompilation: false, // Disable lazy compilation to avoid module resolution issues
+    hmr: false, // Disable HMR to avoid JIT issues
+  },
   plugins: [
     pluginModuleFederation({
       name: 'customersMF',

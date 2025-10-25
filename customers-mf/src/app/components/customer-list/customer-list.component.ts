@@ -14,23 +14,26 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { CustomerService } from '../../services/customer.service';
 import { Customer } from '../../models/customer.model';
 import { CustomerDeleteDialogComponent } from '../customer-delete-dialog/customer-delete-dialog.component';
+import { CustomerDetailDialogComponent } from '../customer-detail-dialog/customer-detail-dialog.component';
+import { CustomerCardComponent } from '../customer-card/customer-card.component';
 
 @Component({
   selector: 'app-customer-list',
   standalone: true,
-  imports: [
-    CommonModule,
-    RouterModule,
-    MatCardModule,
-    MatButtonModule,
-    MatIconModule,
-    MatTableModule,
-    MatPaginatorModule,
-    MatSortModule,
-    MatDialogModule,
-    MatSnackBarModule,
-    MatProgressSpinnerModule,
-  ],
+    imports: [
+      CommonModule,
+      RouterModule,
+      MatCardModule,
+      MatButtonModule,
+      MatIconModule,
+      MatTableModule,
+      MatPaginatorModule,
+      MatSortModule,
+      MatDialogModule,
+      MatSnackBarModule,
+      MatProgressSpinnerModule,
+      CustomerCardComponent,
+    ],
   template: `
     <div class="customer-management-system">
       <!-- Professional Header with Statistics -->
@@ -170,117 +173,29 @@ import { CustomerDeleteDialogComponent } from '../customer-delete-dialog/custome
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="search-icon">
                   <path d="M21 21L16.514 16.506M19 10.5A8.5 8.5 0 1 1 10.5 2 8.5 8.5 0 0 1 19 10.5Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
-                <input type="text" placeholder="Search customers..." class="search-input" />
+                <input 
+                  type="text" 
+                  placeholder="Search customers..." 
+                  class="search-input"
+                  [value]="searchQuery()"
+                  (input)="onSearchChange($event)"
+                />
               </div>
 
-              <button class="filter-button" (click)="toggleFilters()">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M22 3H2L10 12.46V19L14 21V12.46L22 3Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-              </button>
-
-              <button class="view-toggle active" (click)="toggleView()">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <rect x="3" y="3" width="7" height="7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                  <rect x="14" y="3" width="7" height="7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                  <rect x="14" y="14" width="7" height="7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                  <rect x="3" y="14" width="7" height="7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-              </button>
             </div>
           </div>
 
-          <!-- Professional Customer Grid -->
-          <div class="professional-grid">
-            @for (customer of customers(); track customer.id) {
-            <div class="customer-card-pro">
-              <div class="card-header">
-                <div class="customer-avatar-pro">
-                  <span class="avatar-text">{{ getInitials(customer.name) }}</span>
-                  <div class="avatar-status online"></div>
-                </div>
-
-                <div class="card-actions">
-                  <button class="card-action-btn favorite">
-                    <span>⭐</span>
-                  </button>
-                  <button class="card-action-btn menu">
-                    <span>⋯</span>
-                  </button>
-                </div>
-              </div>
-
-              <div class="card-body">
-                <h3 class="customer-name-pro">{{ customer.name }}</h3>
-
-                <div class="contact-info-pro">
-                  <div class="contact-item-pro">
-                    <div class="contact-icon-wrapper">
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M4 4H20C21.1 4 22 4.9 22 6V18C22 19.1 21.1 20 20 20H4C2.9 20 2 19.1 2 18V6C2 4.9 2.9 4 4 4Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        <path d="M22 6L12 13L2 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                      </svg>
-                    </div>
-                    <div class="contact-details">
-                      <span class="contact-label">Email</span>
-                      <a href="mailto:{{ customer.email }}" class="contact-value">{{
-                        customer.email
-                      }}</a>
-                    </div>
-                  </div>
-
-                  <div class="contact-item-pro">
-                    <div class="contact-icon-wrapper">
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M22 16.92V19.92C22.0011 20.1985 21.9441 20.4742 21.8325 20.7293C21.7209 20.9845 21.5573 21.2136 21.3521 21.4019C21.1468 21.5901 20.9046 21.7335 20.6407 21.8227C20.3769 21.9119 20.0974 21.9451 19.82 21.92C16.7428 21.5856 13.787 20.5341 11.19 18.85C8.77382 17.3147 6.72533 15.2662 5.18999 12.85C3.49997 10.2412 2.44824 7.27099 2.11999 4.18C2.095 3.90347 2.12787 3.62476 2.21649 3.36162C2.30512 3.09849 2.44756 2.85669 2.63476 2.65162C2.82196 2.44655 3.0498 2.28271 3.30379 2.17052C3.55777 2.05833 3.83233 2.00026 4.10999 2H7.10999C7.59531 1.99522 8.06679 2.16708 8.43376 2.48353C8.80073 2.79999 9.03996 3.23945 9.10999 3.72C9.23662 4.68007 9.47144 5.62273 9.80999 6.53C9.94454 6.88792 9.97366 7.27691 9.8939 7.65088C9.81415 8.02485 9.62886 8.36811 9.35999 8.64L8.08999 9.91C9.51355 12.4135 11.5865 14.4864 14.09 15.91L15.36 14.64C15.6319 14.3711 15.9751 14.1858 16.3491 14.1061C16.7231 14.0263 17.1121 14.0555 17.47 14.19C18.3773 14.5286 19.3199 14.7634 20.28 14.89C20.7658 14.9585 21.2094 15.2032 21.5265 15.5775C21.8437 15.9518 22.0122 16.4296 22 16.92Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                      </svg>
-                    </div>
-                    <div class="contact-details">
-                      <span class="contact-label">Phone</span>
-                      <a href="tel:{{ customer.phone }}" class="contact-value">{{
-                        customer.phone
-                      }}</a>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="customer-meta">
-                  <div class="meta-item">
-                    <span class="meta-label">Member since</span>
-                    <span class="meta-value">{{ formatDate(customer.createdAt) }}</span>
-                  </div>
-                </div>
-              </div>
-
-              <div class="card-footer">
-                <div class="action-buttons">
-                  <button class="action-button-pro edit" (click)="editCustomer(customer)">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                      <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
-                    <span>Edit</span>
-                  </button>
-
-                  <button class="action-button-pro view" (click)="viewCustomer(customer)">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                      <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
-                    <span>View</span>
-                  </button>
-
-                  <button class="action-button-pro delete" (click)="deleteCustomer(customer)">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6M10 11v6M14 11v6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
-                    <span>Delete</span>
-                  </button>
-                </div>
-              </div>
-            </div>
-            }
-          </div>
+                 <!-- Professional Customer Grid -->
+                 <div class="professional-grid">
+                   @for (customer of filteredCustomers(); track customer.id) {
+                     <app-customer-card 
+                       [customer]="customer"
+                       (edit)="editCustomer($event)"
+                       (view)="viewCustomer($event)"
+                       (delete)="deleteCustomer($event)">
+                     </app-customer-card>
+                   }
+                 </div>
           }
         </div>
         }
@@ -1124,6 +1039,21 @@ export class CustomerListComponent implements OnInit {
   private snackBar = inject(MatSnackBar);
   private router = inject(Router);
 
+  // Search functionality
+  searchQuery = signal('');
+  filteredCustomers = computed(() => {
+    const query = this.searchQuery().toLowerCase();
+    if (!query) return this.customers();
+    return this.customers().filter(customer => 
+      customer.name.toLowerCase().includes(query) ||
+      customer.email.toLowerCase().includes(query) ||
+      customer.company?.toLowerCase().includes(query) ||
+      customer.position?.toLowerCase().includes(query) ||
+      customer.city?.toLowerCase().includes(query) ||
+      customer.country?.toLowerCase().includes(query)
+    );
+  });
+
   // Computed signal for customers
   customers = computed(() => this.customerService.customers());
 
@@ -1135,26 +1065,33 @@ export class CustomerListComponent implements OnInit {
     this.customerService.loadCustomers();
   }
 
+  onSearchChange(event: Event): void {
+    const target = event.target as HTMLInputElement;
+    this.searchQuery.set(target.value);
+  }
+
   addNewCustomer(): void {
     this.router.navigate(['/customers/new']);
   }
 
-  toggleFilters(): void {
-    this.snackBar.open('Filters functionality coming soon!', 'Close', { duration: 2000 });
-  }
-
-  toggleView(): void {
-    this.snackBar.open('View toggle functionality coming soon!', 'Close', { duration: 2000 });
-  }
 
   editCustomer(customer: Customer): void {
     this.router.navigate(['/customers', customer.id, 'edit']);
   }
 
   viewCustomer(customer: Customer): void {
-    // For now, just show customer details in a snackbar
-    // In a real app, this would open a detailed view modal
-    this.snackBar.open(`Viewing ${customer.name} - ${customer.email}`, 'Close', { duration: 3000 });
+    const dialogRef = this.dialog.open(CustomerDetailDialogComponent, {
+      data: customer,
+      width: '600px',
+      maxWidth: '90vw',
+      disableClose: false,
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result === 'edit') {
+        this.editCustomer(customer);
+      }
+    });
   }
 
   deleteCustomer(customer: Customer): void {
