@@ -1,4 +1,4 @@
-import { Component, OnInit, signal, computed, inject } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
@@ -11,7 +11,7 @@ import { MatDialogModule, MatDialog } from '@angular/material/dialog';
 import { MatSnackBarModule, MatSnackBar } from '@angular/material/snack-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
-import { CustomerService } from '../../services/customer.service';
+import { CustomerStore } from '../../stores/customer.store';
 import { Customer } from '../../models/customer.model';
 import { CustomerDeleteDialogComponent } from '../customer-delete-dialog/customer-delete-dialog.component';
 import { CustomerDetailDialogComponent } from '../customer-detail-dialog/customer-detail-dialog.component';
@@ -75,10 +75,10 @@ import { CustomerCardComponent } from '../customer-card/customer-card.component'
                 <path d="M7 15H13V17H7V15Z" fill="currentColor"/>
               </svg>
             </div>
-            <div class="metric-content">
-              <div class="metric-value">{{ customers().length }}</div>
-              <div class="metric-label">Total Customers</div>
-            </div>
+                   <div class="metric-content">
+                     <div class="metric-value">{{ totalCustomers() }}</div>
+                     <div class="metric-label">Total Customers</div>
+                   </div>
           </div>
 
           <div class="metric-card active">
@@ -121,7 +121,7 @@ import { CustomerCardComponent } from '../customer-card/customer-card.component'
 
       <!-- Content Area -->
       <div class="content-area">
-        @if (customerService.loading()) {
+             @if (loading()) {
         <div class="loading-state">
           <div class="professional-spinner">
             <div class="spinner-ring"></div>
@@ -130,14 +130,14 @@ import { CustomerCardComponent } from '../customer-card/customer-card.component'
           <h3 class="loading-title">Loading Customer Data</h3>
           <p class="loading-subtitle">Fetching the latest customer information...</p>
         </div>
-        } @else if (customerService.error()) {
+             } @else if (error()) {
         <div class="error-state">
           <div class="error-visual">
             <div class="error-icon-large">⚠️</div>
             <div class="error-pattern"></div>
           </div>
           <h3 class="error-title">Connection Issue</h3>
-          <p class="error-message">{{ customerService.error() }}</p>
+                 <p class="error-message">{{ error() }}</p>
           <button class="retry-button" (click)="loadCustomers()">
             <span class="button-icon">🔄</span>
             <span>Retry Connection</span>
@@ -1088,59 +1088,43 @@ export class CustomerListComponent implements OnInit {
   displayedColumns: string[] = ['name', 'email', 'phone', 'actions'];
 
   // Using inject() function for dependency injection (modern Angular approach)
-  customerService = inject(CustomerService);
+  customerStore = inject(CustomerStore);
   private dialog = inject(MatDialog);
   private snackBar = inject(MatSnackBar);
   private router = inject(Router);
 
-  // Search and filter functionality
-  searchQuery = signal('');
-  statusFilter = signal('');
+  // Store signals - ahora vienen del store
+  customers = this.customerStore.customers;
+  loading = this.customerStore.isLoading;
+  error = this.customerStore.error;
+  filteredCustomers = this.customerStore.filteredCustomers;
   
-  filteredCustomers = computed(() => {
-    let filtered = this.customers();
-    
-    // Apply search filter
-    const query = this.searchQuery().toLowerCase();
-    if (query) {
-      filtered = filtered.filter(customer => 
-        customer.name.toLowerCase().includes(query) ||
-        customer.email.toLowerCase().includes(query) ||
-        customer.company?.toLowerCase().includes(query) ||
-        customer.position?.toLowerCase().includes(query) ||
-        customer.city?.toLowerCase().includes(query) ||
-        customer.country?.toLowerCase().includes(query)
-      );
-    }
-    
-    // Apply status filter
-    const status = this.statusFilter();
-    if (status) {
-      filtered = filtered.filter(customer => customer.status === status);
-    }
-    
-    return filtered;
-  });
-
-  // Computed signal for customers
-  customers = computed(() => this.customerService.customers());
+  // Propiedades del store para el template
+  searchQuery = this.customerStore.searchQuery;
+  statusFilter = this.customerStore.statusFilter;
+  
+  // Métricas del store
+  totalCustomers = this.customerStore.totalCustomers;
+  activeCustomers = this.customerStore.activeCustomers;
+  recentCustomers = this.customerStore.recentCustomers;
+  growthPercentage = this.customerStore.growthPercentage;
 
   ngOnInit(): void {
     this.loadCustomers();
   }
 
   loadCustomers(): void {
-    this.customerService.loadCustomers();
+    this.customerStore.loadCustomers().subscribe();
   }
 
   onSearchChange(event: Event): void {
     const target = event.target as HTMLInputElement;
-    this.searchQuery.set(target.value);
+    this.customerStore.setSearchQuery(target.value);
   }
 
   onStatusFilterChange(event: Event): void {
     const target = event.target as HTMLSelectElement;
-    this.statusFilter.set(target.value);
+    this.customerStore.setStatusFilter(target.value);
   }
 
   addNewCustomer(): void {
@@ -1155,8 +1139,10 @@ export class CustomerListComponent implements OnInit {
   viewCustomer(customer: Customer): void {
     const dialogRef = this.dialog.open(CustomerDetailDialogComponent, {
       data: customer,
-      width: '600px',
-      maxWidth: '90vw',
+      width: '1000px',
+      maxWidth: '98vw',
+      height: '90vh',
+      maxHeight: '95vh',
       disableClose: false,
     });
 
@@ -1176,12 +1162,12 @@ export class CustomerListComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((confirmed) => {
       if (confirmed) {
-        this.customerService.deleteCustomer(customer.id).subscribe({
+        this.customerStore.deleteCustomer(customer.id).subscribe({
           next: () => {
             this.snackBar.open('Customer deleted successfully', 'Close', { duration: 3000 });
             console.log('Customer deleted successfully');
           },
-          error: (error) => {
+          error: (error: any) => {
             console.error('Error deleting customer:', error);
             this.snackBar.open('Error deleting customer', 'Close', { duration: 3000 });
           },
@@ -1199,43 +1185,17 @@ export class CustomerListComponent implements OnInit {
       .slice(0, 2);
   }
 
+  // Métodos de métricas ahora usan el store
   getActiveCustomers(): number {
-    return this.customers().filter(c => c.status === 'active').length;
+    return this.activeCustomers();
   }
 
   getRecentCustomers(): number {
-    const oneMonthAgo = new Date();
-    oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
-
-    return this.customers().filter((customer) => {
-      const createdDate = new Date(customer.createdAt);
-      return createdDate > oneMonthAgo;
-    }).length;
+    return this.recentCustomers();
   }
 
   getGrowthPercentage(): string {
-    const currentMonth = new Date();
-    const lastMonth = new Date();
-    lastMonth.setMonth(lastMonth.getMonth() - 1);
-    
-    const currentMonthCustomers = this.customers().filter(c => {
-      const createdDate = new Date(c.createdAt);
-      return createdDate.getMonth() === currentMonth.getMonth() && 
-             createdDate.getFullYear() === currentMonth.getFullYear();
-    }).length;
-    
-    const lastMonthCustomers = this.customers().filter(c => {
-      const createdDate = new Date(c.createdAt);
-      return createdDate.getMonth() === lastMonth.getMonth() && 
-             createdDate.getFullYear() === lastMonth.getFullYear();
-    }).length;
-    
-    if (lastMonthCustomers === 0) {
-      return currentMonthCustomers > 0 ? '+100%' : '0%';
-    }
-    
-    const growth = ((currentMonthCustomers - lastMonthCustomers) / lastMonthCustomers) * 100;
-    return growth >= 0 ? `+${Math.round(growth)}%` : `${Math.round(growth)}%`;
+    return this.growthPercentage();
   }
 
   formatDate(dateString: string): string {

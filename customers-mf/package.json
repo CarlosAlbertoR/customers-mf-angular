@@ -42,6 +42,7 @@
     "@angular/router": "^20.3.0",
     "@angular/ssr": "^20.3.7",
     "@module-federation/enhanced": "0.14.3",
+    "@ngrx/signals": "^20.1.0",
     "express": "^5.1.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",

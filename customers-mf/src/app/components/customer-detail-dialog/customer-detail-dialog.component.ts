@@ -186,12 +186,14 @@ import { Customer } from '../../models/customer.model';
       padding: 0;
       background: white;
       border-radius: 16px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.15);
       font-family: 'Inter', sans-serif;
-      max-width: 600px;
+      max-width: 1000px;
       width: 100%;
-      max-height: 80vh;
+      max-height: 95vh;
       overflow-y: auto;
+      display: flex;
+      flex-direction: column;
     }
 
     .dialog-header {
@@ -309,11 +311,31 @@ import { Customer } from '../../models/customer.model';
     }
 
     .dialog-content {
-      padding: 2rem;
+      padding: 2.5rem;
+      flex: 1;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2.5rem;
+      overflow-y: auto;
+    }
+
+    @media (max-width: 1024px) {
+      .dialog-content {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+        padding: 2rem;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .dialog-content {
+        padding: 1.5rem;
+        gap: 1.5rem;
+      }
     }
 
     .info-section {
-      margin-bottom: 2rem;
+      margin-bottom: 1.5rem;
     }
 
     .info-section:last-child {
@@ -334,16 +356,16 @@ import { Customer } from '../../models/customer.model';
 
     .info-grid {
       display: grid;
-      gap: 1rem;
+      gap: 0.5rem;
     }
 
     .info-item {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 0.75rem;
+      padding: 0.5rem 0.75rem;
       background: rgba(248, 250, 252, 0.5);
-      border-radius: 12px;
+      border-radius: 8px;
       border: 1px solid rgba(0, 0, 0, 0.06);
     }
 
