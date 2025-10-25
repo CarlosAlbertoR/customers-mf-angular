@@ -7,20 +7,47 @@ export default defineConfig({
       index: './src/main.ts',
     },
   },
+  dev: {
+    lazyCompilation: false, // Disable lazy compilation to avoid module resolution issues
+  },
   plugins: [
     pluginModuleFederation({
-      name: 'customers_mf',
+      name: 'customersMF',
+      filename: 'customersMF.js',
+      dts: false, // Disable automatic type generation to avoid build issues
       exposes: {
-        './Component': './src/app/app.ts',
+        './Component': './src/mf-entry.ts',
+        './bootstrap': './src/mf-bootstrap.ts',
       },
       shared: {
-        '@angular/core': { singleton: true },
-        '@angular/common': { singleton: true },
-        '@angular/router': { singleton: true },
-        '@angular/compiler': { singleton: true },
-        '@angular/platform-browser': { singleton: true },
-        '@angular/platform-browser-dynamic': { singleton: true },
-        'rxjs': { singleton: true },
+        '@angular/core': {
+          singleton: true,
+          requiredVersion: false,
+        },
+        '@angular/common': {
+          singleton: true,
+          requiredVersion: false,
+        },
+        '@angular/router': {
+          singleton: true,
+          requiredVersion: false,
+        },
+        '@angular/platform-browser': {
+          singleton: true,
+          requiredVersion: false,
+        },
+        '@angular/platform-browser-dynamic': {
+          singleton: true,
+          requiredVersion: false,
+        },
+        '@angular/compiler': {
+          singleton: true,
+          requiredVersion: false,
+        },
+        rxjs: {
+          singleton: true,
+          requiredVersion: false,
+        },
       },
     }),
   ],
@@ -42,8 +69,11 @@ export default defineConfig({
           dynamicImport: true,
         },
         transform: {
-          legacyDecorator: true,
           decoratorMetadata: true,
+          useDefineForClassFields: false,
+        },
+        experimental: {
+          plugins: [],
         },
       },
     },

@@ -30,7 +30,7 @@ help:
 	@echo "📱 Access Points:"
 	@echo "  Shell:     http://localhost:3000"
 	@echo "  Angular:   http://localhost:3001"
-	@echo "  API:       http://localhost:3000/api"
+	@echo "  API:       http://localhost:3002"
 
 # Install all dependencies
 install:
@@ -62,7 +62,7 @@ clean:
 
 # Start mock API server
 start-api:
-	@echo "🌐 Starting mock API server on port 3000..."
+	@echo "🌐 Starting mock API server on port 3002..."
 	cd customers-mf && pnpm run api
 
 # Start Angular microfrontend
@@ -87,7 +87,7 @@ dev: install
 	@echo "📱 Access points:"
 	@echo "  Shell:     http://localhost:3000"
 	@echo "  Angular:   http://localhost:3001"
-	@echo "  API:       http://localhost:3000/api"
+	@echo "  API:       http://localhost:3002"
 	@echo ""
 	@echo "🛑 Press Ctrl+C to stop all services"
 	@echo ""
@@ -145,7 +145,7 @@ dev-hot:
 	@echo "📱 Access points:"
 	@echo "  Shell:     http://localhost:3000"
 	@echo "  Angular:   http://localhost:3001"
-	@echo "  API:       http://localhost:3000/api"
+	@echo "  API:       http://localhost:3002"
 	@echo ""
 	@trap 'make stop-all' EXIT; \
 	cd customers-mf && pnpm run api & \
@@ -189,6 +189,7 @@ status:
 	@echo "🔍 Port Status:"
 	@lsof -i :3000 && echo "Port 3000: In use" || echo "Port 3000: Available"
 	@lsof -i :3001 && echo "Port 3001: In use" || echo "Port 3001: Available"
+	@lsof -i :3002 && echo "Port 3002: In use" || echo "Port 3002: Available"
 	@echo ""
 	@echo "📁 Project Structure:"
 	@ls -la

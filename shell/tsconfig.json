@@ -21,6 +21,6 @@
       "*": ["./@mf-types/*"]
     }
   },
-  "include": ["src"],
+  "include": ["src", "src/types/**/*"],
   "exclude": ["**/node_modules", "dist"]
 }
