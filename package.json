@@ -4,15 +4,15 @@
   "description": "Angular 20 Microfrontend Architecture with Module Federation",
   "scripts": {
     "build": "pnpm run build:shell && pnpm run build:customers-mf",
-    "build:shell": "cd shell && pnpm install && pnpm run build",
-    "build:customers-mf": "cd customers-mf && pnpm install && pnpm run build",
+    "build:shell": "pnpm --filter shell run build",
+    "build:customers-mf": "pnpm --filter customers-mf run build",
     "start": "pnpm run start:shell",
-    "start:shell": "cd shell && pnpm run start",
-    "start:customers-mf": "cd customers-mf && pnpm run start",
+    "start:shell": "pnpm --filter shell run start",
+    "start:customers-mf": "pnpm --filter customers-mf run start",
     "test": "pnpm run test:customers-mf",
-    "test:customers-mf": "cd customers-mf && pnpm run test",
-    "test:shell": "cd shell && pnpm run test",
-    "install:all": "pnpm install && cd shell && pnpm install && cd ../customers-mf && pnpm install",
+    "test:customers-mf": "pnpm --filter customers-mf run test",
+    "test:shell": "pnpm --filter shell run test",
+    "install:all": "pnpm install",
     "dev": "concurrently \"pnpm run start:shell\" \"pnpm run start:customers-mf\""
   },
   "devDependencies": {
