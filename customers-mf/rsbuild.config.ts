@@ -69,6 +69,7 @@ export default defineConfig({
           dynamicImport: true,
         },
         transform: {
+          legacyDecorator: true,
           decoratorMetadata: true,
           useDefineForClassFields: false,
         },

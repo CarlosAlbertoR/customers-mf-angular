@@ -40,12 +40,20 @@ export class CustomerService {
       .get<Customer[]>(this.API_URL)
       .pipe(
         tap((customers) => {
-          this.customersSignal.set(customers);
-          this.customersSubject.next(customers);
+          // Convert date strings to Date objects
+          const processedCustomers = customers.map(customer => ({
+            ...customer,
+            createdAt: new Date(customer.createdAt),
+            updatedAt: new Date(customer.updatedAt)
+          }));
+          
+          this.customersSignal.set(processedCustomers);
+          this.customersSubject.next(processedCustomers);
           this.loadingSignal.set(false);
         }),
         catchError((error) => {
-          this.errorSignal.set('Error loading customers');
+          console.error('Error loading customers:', error);
+          this.errorSignal.set('Failed to load customers');
           this.loadingSignal.set(false);
           return throwError(() => error);
         })
@@ -59,9 +67,16 @@ export class CustomerService {
 
     return this.http.post<Customer>(this.API_URL, customer).pipe(
       tap((newCustomer) => {
+        // Convert date strings to Date objects
+        const processedCustomer = {
+          ...newCustomer,
+          createdAt: new Date(newCustomer.createdAt),
+          updatedAt: new Date(newCustomer.updatedAt)
+        };
+        
         const currentCustomers = this.customersSignal();
-        this.customersSignal.set([...currentCustomers, newCustomer]);
-        this.customersSubject.next([...currentCustomers, newCustomer]);
+        this.customersSignal.set([...currentCustomers, processedCustomer]);
+        this.customersSubject.next([...currentCustomers, processedCustomer]);
         this.loadingSignal.set(false);
       }),
       catchError((error) => {
@@ -78,11 +93,18 @@ export class CustomerService {
 
     return this.http.put<Customer>(`${this.API_URL}/${customer.id}`, customer).pipe(
       tap((updatedCustomer) => {
+        // Convert date strings to Date objects
+        const processedCustomer = {
+          ...updatedCustomer,
+          createdAt: new Date(updatedCustomer.createdAt),
+          updatedAt: new Date(updatedCustomer.updatedAt)
+        };
+        
         const currentCustomers = this.customersSignal();
         const index = currentCustomers.findIndex((c) => c.id === customer.id);
         if (index !== -1) {
           const newCustomers = [...currentCustomers];
-          newCustomers[index] = updatedCustomer;
+          newCustomers[index] = processedCustomer;
           this.customersSignal.set(newCustomers);
           this.customersSubject.next(newCustomers);
         }
@@ -117,8 +139,122 @@ export class CustomerService {
   }
 
   getCustomerById(id: string): Observable<Customer> {
-    const customer = this.customersSignal().find((c) => c.id === id);
-    return customer ? of(customer) : throwError(() => new Error('Customer not found'));
+    return this.http.get<Customer>(`${this.API_URL}/${id}`).pipe(
+      map(customer => ({
+        ...customer,
+        createdAt: new Date(customer.createdAt),
+        updatedAt: new Date(customer.updatedAt)
+      })),
+      catchError((error) => {
+        console.error('Error getting customer by ID:', error);
+        return throwError(() => new Error('Customer not found'));
+      })
+    );
+  }
+
+  // Advanced search and filtering methods using API
+  searchCustomers(query: string): Observable<Customer[]> {
+    return this.http.get<Customer[]>(`${this.API_URL}?q=${encodeURIComponent(query)}`).pipe(
+      map(customers => customers.map(customer => ({
+        ...customer,
+        createdAt: new Date(customer.createdAt),
+        updatedAt: new Date(customer.updatedAt)
+      }))),
+      catchError((error) => {
+        console.error('Error searching customers:', error);
+        return of([]);
+      })
+    );
+  }
+
+  filterCustomersByStatus(status: 'active' | 'inactive' | 'pending'): Observable<Customer[]> {
+    return this.http.get<Customer[]>(`${this.API_URL}?status=${status}`).pipe(
+      map(customers => customers.map(customer => ({
+        ...customer,
+        createdAt: new Date(customer.createdAt),
+        updatedAt: new Date(customer.updatedAt)
+      }))),
+      catchError((error) => {
+        console.error('Error filtering customers by status:', error);
+        return of([]);
+      })
+    );
+  }
+
+  filterCustomersByCompany(company: string): Observable<Customer[]> {
+    return this.http.get<Customer[]>(`${this.API_URL}?company_like=${encodeURIComponent(company)}`).pipe(
+      map(customers => customers.map(customer => ({
+        ...customer,
+        createdAt: new Date(customer.createdAt),
+        updatedAt: new Date(customer.updatedAt)
+      }))),
+      catchError((error) => {
+        console.error('Error filtering customers by company:', error);
+        return of([]);
+      })
+    );
+  }
+
+  getCustomersByCountry(country: string): Observable<Customer[]> {
+    return this.http.get<Customer[]>(`${this.API_URL}?country_like=${encodeURIComponent(country)}`).pipe(
+      map(customers => customers.map(customer => ({
+        ...customer,
+        createdAt: new Date(customer.createdAt),
+        updatedAt: new Date(customer.updatedAt)
+      }))),
+      catchError((error) => {
+        console.error('Error filtering customers by country:', error);
+        return of([]);
+      })
+    );
+  }
+
+  getActiveCustomers(): Observable<Customer[]> {
+    return this.filterCustomersByStatus('active');
+  }
+
+  getPendingCustomers(): Observable<Customer[]> {
+    return this.filterCustomersByStatus('pending');
+  }
+
+  getInactiveCustomers(): Observable<Customer[]> {
+    return this.filterCustomersByStatus('inactive');
+  }
+
+  // Statistics methods
+  getCustomerStats(): Observable<{
+    total: number;
+    active: number;
+    inactive: number;
+    pending: number;
+    byCountry: { [key: string]: number };
+    byCompany: { [key: string]: number };
+  }> {
+    const customers = this.customersSignal();
+    const stats = {
+      total: customers.length,
+      active: customers.filter(c => c.status === 'active').length,
+      inactive: customers.filter(c => c.status === 'inactive').length,
+      pending: customers.filter(c => c.status === 'pending').length,
+      byCountry: {} as { [key: string]: number },
+      byCompany: {} as { [key: string]: number }
+    };
+
+    // Count by country
+    customers.forEach(customer => {
+      if (customer.country) {
+        stats.byCountry[customer.country] = (stats.byCountry[customer.country] || 0) + 1;
+      }
+    });
+
+    // Count by company
+    customers.forEach(customer => {
+      if (customer.company) {
+        stats.byCompany[customer.company] = (stats.byCompany[customer.company] || 0) + 1;
+      }
+    });
+
+    return of(stats);
   }
 
   // Traditional RxJS methods for backward compatibility
