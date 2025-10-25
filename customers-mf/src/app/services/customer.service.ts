@@ -27,10 +27,6 @@ export class CustomerService {
   private customersSubject = new BehaviorSubject<Customer[]>([]);
   customers$ = this.customersSubject.asObservable();
 
-  constructor() {
-    this.loadCustomers();
-  }
-
   // Signal-based methods
   loadCustomers(): void {
     this.loadingSignal.set(true);

@@ -217,7 +217,7 @@ export const bootstrap = async (element: HTMLElement) => {
 
     // Clear existing content
     element.innerHTML = '';
-
+    
     // Create Angular root element
     const angularRoot = document.createElement('mf-customer-app');
     element.appendChild(angularRoot);

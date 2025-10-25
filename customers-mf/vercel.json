@@ -1,0 +1,23 @@
+{
+  "buildCommand": "pnpm install && pnpm build",
+  "testCommand": "pnpm test:ci",
+  "outputDirectory": "dist/customers-mf",
+  "framework": "angular",
+  "installCommand": "pnpm install",
+  "devCommand": "pnpm start",
+  "builds": [
+    {
+      "src": "package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "dist/customers-mf"
+      }
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "/index.html"
+    }
+  ]
+}
