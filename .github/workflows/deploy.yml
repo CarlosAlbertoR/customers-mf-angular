@@ -23,7 +23,9 @@ jobs:
         cache: 'pnpm'
 
     - name: Install dependencies
-      run: pnpm install
+      run: |
+        pnpm install --frozen-lockfile
+        echo "Dependencies installed successfully"
     
     - name: Run tests
       run: |
@@ -59,7 +61,9 @@ jobs:
         cache: 'pnpm'
 
     - name: Install dependencies
-      run: pnpm install
+      run: |
+        pnpm install --frozen-lockfile
+        echo "Dependencies installed successfully"
 
     - name: Build applications
       run: pnpm run build
