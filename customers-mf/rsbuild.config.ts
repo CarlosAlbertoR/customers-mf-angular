@@ -18,6 +18,9 @@ export default defineConfig({
     target: 'es2015', // Ensure modern target for AOT
     ssr: false, // Disable SSR for Module Federation
   },
+  output: {
+    assetPrefix: '/customers/',
+  },
   plugins: [
     pluginModuleFederation({
       name: 'customersMF',
