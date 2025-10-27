@@ -35,6 +35,10 @@
       "dest": "/customers-mf/mf-manifest.json"
     },
     {
+      "src": "/customers/static/(.*)",
+      "dest": "/customers-mf/static/$1"
+    },
+    {
       "src": "/customers/(.*)",
       "dest": "/customers-mf/$1"
     },
