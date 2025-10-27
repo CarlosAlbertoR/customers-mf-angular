@@ -9,7 +9,7 @@ const customersMFUrl = isDevelopment
 export default createModuleFederationConfig({
   name: "shell",
   remotes: {
-    customersMF: customersMFUrl,
+    customersMF: `customersMF@${customersMFUrl}`,
   },
   shared: {
     react: {
