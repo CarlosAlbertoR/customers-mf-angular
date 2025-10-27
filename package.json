@@ -18,6 +18,9 @@
     "dev": "concurrently \"pnpm run start:shell\" \"pnpm run start:customers-mf\" \"pnpm run start:api\"",
     "vercel-build": "pnpm run install:all && pnpm run build"
   },
+  "dependencies": {
+    "json-server": "^1.0.0-beta.1"
+  },
   "devDependencies": {
     "concurrently": "^8.2.2"
   },

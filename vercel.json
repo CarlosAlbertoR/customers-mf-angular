@@ -17,14 +17,14 @@
       }
     },
     {
-      "src": "customers-mf/db.json",
-      "use": "@vercel/json-server"
+      "src": "api/customers.js",
+      "use": "@vercel/node"
     }
   ],
   "routes": [
     {
       "src": "/api/customers/(.*)",
-      "dest": "/customers-mf/db.json"
+      "dest": "/api/customers.js"
     },
     {
       "src": "/customers/(.*)",
