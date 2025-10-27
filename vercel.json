@@ -1,15 +1,9 @@
 {
   "version": 2,
+  "name": "angular-microfrontend",
   "builds": [
     {
       "src": "shell/package.json",
-      "use": "@vercel/static-build",
-      "config": {
-        "distDir": "dist"
-      }
-    },
-    {
-      "src": "customers-mf/package.json", 
       "use": "@vercel/static-build",
       "config": {
         "distDir": "dist"
@@ -26,10 +20,6 @@
       "dest": "/shell/$1"
     }
   ],
-  "env": {
-    "NODE_ENV": "production"
-  },
-  "installCommand": "pnpm install --frozen-lockfile",
-  "buildCommand": "pnpm run build",
-  "outputDirectory": "dist"
+  "installCommand": "corepack enable && pnpm install --frozen-lockfile",
+  "buildCommand": "corepack enable && pnpm run build"
 }
