@@ -3,7 +3,14 @@
   "name": "angular-microfrontend",
   "builds": [
     {
-      "src": "package.json",
+      "src": "shell/package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "dist"
+      }
+    },
+    {
+      "src": "customers-mf/package.json",
       "use": "@vercel/static-build",
       "config": {
         "distDir": "dist"
@@ -40,5 +47,5 @@
     "ENABLE_EXPERIMENTAL_COREPACK": "1"
   },
   "installCommand": "pnpm install --frozen-lockfile",
-  "buildCommand": "pnpm run build"
+  "buildCommand": "echo 'Build handled by individual builds'"
 }

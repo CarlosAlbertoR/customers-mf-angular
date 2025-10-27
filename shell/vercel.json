@@ -2,12 +2,5 @@
   "version": 2,
   "buildCommand": "pnpm run build",
   "outputDirectory": "dist",
-  "installCommand": "pnpm install --frozen-lockfile",
-  "framework": null,
-  "rewrites": [
-    {
-      "source": "/customers/(.*)",
-      "destination": "/customers-mf/$1"
-    }
-  ]
+  "installCommand": "pnpm install --frozen-lockfile"
 }
