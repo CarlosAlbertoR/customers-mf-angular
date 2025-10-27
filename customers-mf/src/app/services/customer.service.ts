@@ -3,12 +3,13 @@ import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
 import { map, catchError, tap } from 'rxjs/operators';
 import { Customer, CreateCustomerRequest, UpdateCustomerRequest } from '../models/customer.model';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CustomerService {
-  private readonly API_URL = 'http://localhost:3002/customers'; // JSON Server endpoint
+  private readonly API_URL = environment.apiUrl; // Environment-based API URL
 
   // Use inject() function for dependency injection
   private http = inject(HttpClient);

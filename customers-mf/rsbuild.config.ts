@@ -6,6 +6,9 @@ export default defineConfig({
     entry: {
       index: './src/main.ts',
     },
+    define: {
+      'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development'),
+    },
   },
   dev: {
     lazyCompilation: false, // Disable lazy compilation to avoid module resolution issues

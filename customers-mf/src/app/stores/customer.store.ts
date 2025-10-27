@@ -3,6 +3,7 @@ import { computed, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { map, catchError, of, tap } from 'rxjs';
 import { Customer, CreateCustomerRequest, UpdateCustomerRequest } from '../models/customer.model';
+import { environment } from '../../environments/environment';
 
 interface CustomerState {
   customers: Customer[];
@@ -107,7 +108,7 @@ export const CustomerStore = signalStore(
   
   withMethods((store) => {
     const http = inject(HttpClient);
-    const API_URL = 'http://localhost:3002/customers';
+    const API_URL = environment.apiUrl;
     
     return {
       // Cargar todos los clientes

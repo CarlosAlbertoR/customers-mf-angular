@@ -1,9 +1,15 @@
 import { createModuleFederationConfig } from "@module-federation/rsbuild-plugin";
 
+// Dynamic configuration based on environment
+const isDevelopment = process.env.NODE_ENV === 'development';
+const customersMFUrl = isDevelopment 
+  ? 'http://localhost:3001/mf-manifest.json'
+  : 'https://customers-mf-angular-f4duaa06u-carlos-alberto-rs-projects.vercel.app/customers-mf/mf-manifest.json';
+
 export default createModuleFederationConfig({
   name: "shell",
   remotes: {
-    customersMF: "customersMF@http://localhost:3001/mf-manifest.json",
+    customersMF: `customersMF@${customersMFUrl}`,
   },
   shared: {
     react: {
