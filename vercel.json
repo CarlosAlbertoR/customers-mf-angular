@@ -8,9 +8,24 @@
       "config": {
         "distDir": "dist"
       }
+    },
+    {
+      "src": "customers-mf/package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "dist"
+      }
+    },
+    {
+      "src": "customers-mf/db.json",
+      "use": "@vercel/json-server"
     }
   ],
   "routes": [
+    {
+      "src": "/api/customers/(.*)",
+      "dest": "/customers-mf/db.json"
+    },
     {
       "src": "/customers/(.*)",
       "dest": "/customers-mf/$1"
@@ -20,6 +35,9 @@
       "dest": "/shell/$1"
     }
   ],
-  "installCommand": "corepack enable && pnpm install --frozen-lockfile",
-  "buildCommand": "corepack enable && pnpm run build"
+  "env": {
+    "ENABLE_EXPERIMENTAL_COREPACK": "1"
+  },
+  "installCommand": "pnpm install --frozen-lockfile",
+  "buildCommand": "pnpm run build"
 }
