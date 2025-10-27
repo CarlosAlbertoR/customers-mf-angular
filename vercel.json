@@ -28,7 +28,7 @@
     },
     {
       "src": "/customers/customersMF.js",
-      "dest": "/customers-mf/customersMF.js"
+      "dest": "/customers-mf/customers/customersMF.js"
     },
     {
       "src": "/customers/mf-manifest.json",
