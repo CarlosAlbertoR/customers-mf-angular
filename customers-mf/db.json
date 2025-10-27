@@ -1,7 +1,6 @@
 {
   "customers": [
     {
-      "id": "1",
       "name": "John Doe",
       "email": "john.doe@example.com",
       "phone": "+1234567890",
@@ -13,11 +12,10 @@
       "website": "https://techcorp.com",
       "notes": "VIP customer with premium support. Interested in enterprise solutions.",
       "status": "active",
-      "createdAt": "2025-08-15T10:30:00.000Z",
-      "updatedAt": "2025-10-20T14:22:00.000Z"
+      "id": "1"
     },
     {
-      "name": "Jane Smith",
+      "name": "Jane Smith ",
       "email": "jane.smith@example.com",
       "phone": "+1987654321",
       "company": "Design Studio Inc",

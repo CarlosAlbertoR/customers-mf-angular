@@ -4,7 +4,7 @@ import { createModuleFederationConfig } from "@module-federation/rsbuild-plugin"
 const isDevelopment = process.env.NODE_ENV === 'development';
 const customersMFUrl = isDevelopment 
   ? 'http://localhost:3001/mf-manifest.json'
-  : 'https://customers-mf-angular-f4duaa06u-carlos-alberto-rs-projects.vercel.app/customers-mf/mf-manifest.json';
+  : 'https://customers-mf-angular-f4duaa06u-carlos-alberto-rs-projects.vercel.app/customers/mf-manifest.json';
 
 export default createModuleFederationConfig({
   name: "shell",

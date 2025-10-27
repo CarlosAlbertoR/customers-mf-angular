@@ -65,6 +65,13 @@ export default defineConfig({
   ],
   server: {
     port: 3001,
+    cors: {
+      origin: [
+        'http://localhost:3000',
+        'https://customers-mf-angular-f4duaa06u-carlos-alberto-rs-projects.vercel.app',
+      ],
+      credentials: true,
+    },
   },
   tools: {
     rspack: {
