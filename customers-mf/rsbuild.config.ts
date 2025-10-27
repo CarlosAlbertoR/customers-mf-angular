@@ -21,7 +21,7 @@ export default defineConfig({
   plugins: [
     pluginModuleFederation({
       name: 'customersMF',
-      filename: 'customersMF.js',
+      filename: 'customers/customersMF.js',
       dts: false, // Disable automatic type generation to avoid build issues
       exposes: {
         './Component': './src/mf-entry.ts',
