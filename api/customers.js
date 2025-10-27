@@ -26,5 +26,15 @@ server.use((req, res, next) => {
 // Usar el router de json-server
 server.use('/api/customers', router);
 
-// Exportar para Vercel
-module.exports = server;
+// Exportar para Vercel Functions
+module.exports = (req, res) => {
+  // Manejar rutas de API
+  if (req.url.startsWith('/api/customers')) {
+    // Remover el prefijo /api/customers para que json-server maneje la ruta correctamente
+    req.url = req.url.replace('/api/customers', '');
+    return server(req, res);
+  }
+  
+  // Para otras rutas, devolver 404
+  res.status(404).json({ error: 'Not found' });
+};

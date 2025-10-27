@@ -68,7 +68,7 @@ export default defineConfig({
     cors: {
       origin: [
         'http://localhost:3000',
-        'https://customers-mf-angular-f4duaa06u-carlos-alberto-rs-projects.vercel.app',
+        'https://customers-mf-angular.vercel.app',
       ],
       credentials: true,
     },
