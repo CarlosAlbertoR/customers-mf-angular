@@ -1,118 +1,180 @@
 # Angular 20 Microfrontend Architecture
 
-Una arquitectura de microfrontends moderna usando Angular 20, Module Federation, Signals y NgRx.
+A modern microfrontend architecture demonstrating Angular 20, Module Federation, and professional development practices.
 
-## 🏗️ Arquitectura
+## 🌐 Live Demo
+
+**Production URL**: [https://customers-mf-angular.vercel.app/](https://customers-mf-angular.vercel.app/)
+
+## 📁 Project Structure
 
 ```
 customers-mf-angular/
-├── shell/                    # Shell Application (Host)
-├── customers-mf/             # Customers Microfrontend
-├── vercel.json              # Vercel Configuration
-├── package.json             # Root package.json
-└── README.md
+├── shell/                    # Host Application (React)
+├── customers-mf/             # Customer Management Microfrontend (Angular 20)
+├── api/                      # REST API (Vercel Functions)
+├── package.json              # Root package configuration
+└── vercel.json              # Deployment configuration
 ```
 
-## 🚀 Despliegue en Vercel
+## 🚀 Installation & Setup
 
-### 🌐 **Demo en Vivo:**
-**URL**: [https://customers-mf-angular.vercel.app/](https://customers-mf-angular.vercel.app/)
-
-### Opción 1: Despliegue Automático
-1. Conecta tu repositorio a Vercel
-2. Vercel detectará automáticamente la configuración
-3. Se desplegarán ambos proyectos
-
-### Opción 2: Despliegue Manual
-```bash
-# Instalar Vercel CLI
-npm i -g vercel
-
-# Desplegar
-vercel --prod
-```
-
-## 🛠️ Desarrollo Local
-
-**Requisitos:**
+### Prerequisites
 - Node.js 22+
-- pnpm 8+
+- pnpm 10+
 
-### 🚀 **Comandos Rápidos (Makefile)**
-
+### Install Dependencies
 ```bash
-# Ver todos los comandos disponibles
-make help
-
-# Instalar dependencias
-make install
-
-# Iniciar todos los servicios (shell + mf + api)
-make start
-
-# Modo desarrollo
-make dev
-
-# Ejecutar tests
-make test
-
-# Build completo
-make build
+pnpm install
 ```
 
-### 📦 **Comandos Individuales**
-
+### Start Development
 ```bash
-# Instalar dependencias
-pnpm install
-
-# Ejecutar en modo desarrollo
+# Start all services (shell + microfrontend + api)
 pnpm run dev
 
-# O ejecutar individualmente
-pnpm run start:shell
-pnpm run start:customers-mf
-pnpm run start:api
+# Or start individually
+pnpm run start:shell      # Shell app (port 3000)
+pnpm run start:customers-mf  # Microfrontend (port 3001)
+pnpm run start:api        # API server (port 3002)
+```
+
+## 🏗️ Build
+
+```bash
+# Build all applications
+pnpm run build
+
+# Build individual applications
+pnpm run build:shell
+pnpm run build:customers-mf
 ```
 
 ## 🧪 Testing
 
 ```bash
-# Ejecutar todos los tests
+# Run all tests
 pnpm run test
 
-# Tests específicos
-pnpm run test:customers-mf
-pnpm run test:shell
+# Run tests with coverage
+pnpm run test:coverage
+
+# Run tests in CI mode
+pnpm run test:ci
 ```
 
-## 📦 Build
+## 🛠️ Technology Stack
 
-```bash
-# Build completo
-pnpm run build
+### Frontend
+- **Angular 20**: Latest Angular with standalone components, signals, and control flow
+- **Angular Material**: UI component library
+- **TypeScript**: Type-safe development
+- **RxJS**: Reactive programming
 
-# Build individual
-pnpm run build:shell
-pnpm run build:customers-mf
+### Architecture
+- **Module Federation**: Microfrontend orchestration
+- **Standalone Components**: Modern Angular architecture without NgModules
+- **Dependency Injection**: Modern `inject()` function
+
+### State Management
+- **Angular Signals**: Native reactive primitives with `signal()` and `computed()`
+- **NgRx Signal Store**: Advanced state management combining Signals with NgRx patterns
+
+### Development & Deployment
+- **pnpm**: Fast package manager
+- **rsbuild**: Modern build tool
+- **Vercel**: Serverless deployment platform
+- **GitHub Actions**: CI/CD automation
+
+## 🔧 Technical Implementation
+
+### Module Federation
+The project implements Module Federation to enable microfrontend architecture:
+
+- **Shell Application**: React-based host that dynamically loads the Angular microfrontend
+- **Customer Microfrontend**: Angular 20 application exposed as a remote module
+- **Shared Dependencies**: Angular core libraries are shared between host and remote
+- **Dynamic Loading**: Microfrontend is loaded at runtime based on user navigation
+
+**Configuration**:
+```typescript
+// shell/module-federation.config.ts
+remotes: {
+  customersMF: `customersMF@${customersMFUrl}`
+}
+
+// customers-mf/rsbuild.config.ts
+exposes: {
+  './Component': './src/mf-entry.ts',
+  './bootstrap': './src/mf-bootstrap.ts'
+}
 ```
 
-## 🌐 URLs de Despliegue
+### Angular Signals & NgRx Signal Store
+Modern state management using Angular's new reactive primitives:
 
-- **Shell App**: `https://tu-proyecto.vercel.app/`
-- **Customers MF**: `https://tu-proyecto.vercel.app/customers/`
+- **Angular Signals**: Used for simple reactive state with `signal()` and `computed()`
+- **NgRx Signal Store**: Advanced state management for complex operations
+- **Reactive Forms**: Form state management with signal integration
+- **Computed Values**: Derived state calculations using `computed()`
 
-## 🔧 Tecnologías
+**Implementation Example**:
+```typescript
+// Using Angular Signals
+const customers = signal<Customer[]>([]);
+const loading = computed(() => customers().length === 0);
 
-- **Angular 20** con Signals
-- **Module Federation** para microfrontends
-- **NgRx Signals Store** para state management
-- **Karma + Jasmine** para testing
-- **Vercel** para deployment
-- **Edge browser** para CI/CD
+// Using NgRx Signal Store
+const customerStore = signalStore(
+  { providedIn: 'root' },
+  withState({ customers: [], loading: false }),
+  withMethods((store) => ({
+    loadCustomers: () => {
+      // Implementation
+    }
+  }))
+);
+```
 
-## 📊 Cobertura de Tests
+### CI/CD Pipeline
+Automated deployment pipeline using GitHub Actions and Vercel:
 
-- **57 specs** ejecutándose
-- **54 tests pasando** (94.7% de éxito)
-- **Cobertura completa** de servicios, componentes y stores
+- **GitHub Actions**: Automated testing and deployment workflow
+- **Vercel Integration**: Automatic deployment on push to main branch
+- **Monorepo Support**: Both applications deploy together
+- **Environment Management**: Automatic environment detection and configuration
+
+**Pipeline Steps**:
+1. **Test**: Run comprehensive test suite
+2. **Build**: Build both shell and microfrontend applications
+3. **Deploy**: Automatic deployment to Vercel
+4. **Verify**: Health checks and deployment verification
+
+## 📊 Features
+
+- **Customer Management**: Full CRUD operations with reactive forms
+- **Modern UI**: Angular Material with custom styling
+- **Responsive Design**: Mobile-first approach
+- **Comprehensive Testing**: Unit and integration tests
+- **Production Ready**: CI/CD pipeline and deployment
+
+## 🌐 Deployment
+
+The application is automatically deployed to Vercel:
+
+- **Automatic Builds**: Triggered by GitHub pushes
+- **Environment Detection**: Automatic development vs production configuration
+- **API Integration**: Vercel Functions for backend services
+- **CDN Distribution**: Global content delivery
+
+## 🧪 Test Coverage
+
+- **57 test specs** covering components, services, and stores
+- **Unit Tests**: Component and service testing with Angular Testing Utilities
+- **Integration Tests**: End-to-end workflow testing
+- **Signal Testing**: Custom utilities for testing reactive state
+- **CI Integration**: Automated test execution in deployment pipeline
+
+---
+
+**Built with Angular 20, Module Federation, and modern web technologies.**

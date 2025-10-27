@@ -20,6 +20,14 @@
       "dest": "/api/customers.js"
     },
     {
+      "src": "/customers/customersMF.js",
+      "dest": "/customers-mf/dist/customersMF.js"
+    },
+    {
+      "src": "/customers/mf-manifest.json",
+      "dest": "/customers-mf/dist/mf-manifest.json"
+    },
+    {
       "src": "/customers/(.*)",
       "dest": "/customers-mf/dist/$1"
     },
