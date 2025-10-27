@@ -23,6 +23,10 @@
   ],
   "routes": [
     {
+      "src": "/api/customers",
+      "dest": "/api/customers.js"
+    },
+    {
       "src": "/api/customers/(.*)",
       "dest": "/api/customers.js"
     },
