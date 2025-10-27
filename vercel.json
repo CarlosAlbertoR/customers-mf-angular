@@ -3,14 +3,7 @@
   "name": "angular-microfrontend",
   "builds": [
     {
-      "src": "shell/package.json",
-      "use": "@vercel/static-build",
-      "config": {
-        "distDir": "dist"
-      }
-    },
-    {
-      "src": "customers-mf/package.json",
+      "src": "package.json",
       "use": "@vercel/static-build",
       "config": {
         "distDir": "dist"
@@ -28,11 +21,11 @@
     },
     {
       "src": "/customers/(.*)",
-      "dest": "/customers-mf/$1"
+      "dest": "/customers-mf/dist/$1"
     },
     {
       "src": "/(.*)",
-      "dest": "/shell/$1"
+      "dest": "/shell/dist/$1"
     }
   ],
   "env": {
