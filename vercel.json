@@ -7,6 +7,13 @@
       "config": {
         "distDir": "dist"
       }
+    },
+    {
+      "src": "customers-mf/package.json", 
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "dist"
+      }
     }
   ],
   "routes": [
@@ -22,11 +29,7 @@
   "env": {
     "NODE_ENV": "production"
   },
-  "functions": {
-    "shell/package.json": {
-      "runtime": "nodejs22.x"
-    }
-  },
-  "installCommand": "pnpm install",
-  "buildCommand": "pnpm run build"
+  "installCommand": "pnpm install --frozen-lockfile",
+  "buildCommand": "pnpm run build",
+  "outputDirectory": "dist"
 }

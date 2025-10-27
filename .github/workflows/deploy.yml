@@ -68,15 +68,11 @@ jobs:
     - name: Build applications
       run: pnpm run build
 
-    - name: Deploy to Vercel (Manual)
-      run: |
-        echo "🚀 Deploy configuration ready!"
-        echo "📋 Next steps:"
-        echo "1. Configure Vercel secrets in GitHub"
-        echo "2. Connect repository to Vercel"
-        echo "3. Deploy will happen automatically"
-        echo ""
-        echo "🔧 Required secrets:"
-        echo "- VERCEL_TOKEN"
-        echo "- ORG_ID" 
-        echo "- PROJECT_ID"
+    - name: Deploy to Vercel
+      uses: amondnet/vercel-action@v25
+      with:
+        vercel-token: ${{ secrets.VERCEL_TOKEN }}
+        vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+        vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+        working-directory: ./
+        vercel-args: '--prod'
